@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>P-Patch Games</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .game-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .game-tab {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: white;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .game-tab:hover {
+            background: var(--stone-soft);
+            transform: translateY(-2px);
+        }
+        
+        .game-tab.active {
+            background: var(--forest);
+            color: white;
+            border-color: var(--forest);
+        }
+        
+        .game-tab h3 {
+            font-family: 'Merriweather', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .game-tab p {
+            font-size: 0.9rem;
+            margin: 0;
+            opacity: 0.8;
+        }
+        
+        .game-container {
+            display: none;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-container.active {
+            display: block;
+        }
+        
+        /* Memory Game Styles */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: var(--forest);
+            border: 3px solid var(--forest);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .memory-card.flipped {
+            background: white;
+        }
+        
+        .memory-card.matched {
+            background: var(--forest-light);
+            border-color: var(--forest-light);
+            opacity: 0.6;
+        }
+        
+        .memory-card-back {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        /* Trivia Styles */
+        .trivia-question {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--forest);
+            font-weight: 500;
+        }
+        
+        .trivia-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .trivia-option {
+            padding: 18px 25px;
+            background: var(--stone-soft);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+        }
+        
+        .trivia-option:hover {
+            background: white;
+            border-color: var(--forest);
+        }
+        
+        .trivia-option.correct {
+            background: var(--forest);
+            color: white;
+            border-color: var(--forest);
+        }
+        
+        .trivia-option.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        
+        .trivia-feedback {
+            font-size: 1.1rem;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        
+        .trivia-feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .trivia-feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Harvest Rush Styles */
+        .harvest-game {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #87CEEB 0%, #c8d5c8 100%);
+            overflow: hidden;
+            border: 3px solid var(--forest);
+        }
+        
+        .basket {
+            position: absolute;
+            bottom: 10px;
+            width: 80px;
+            height: 60px;
+            background: #8B4513;
+            border-radius: 0 0 10px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .falling-item {
+            position: absolute;
+            font-size: 2.5rem;
+            cursor: default;
+            animation: fall linear;
+        }
+        
+        @keyframes fall {
+            to {
+                top: 100%;
+            }
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--stone-soft);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forest);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+        
+        .game-button {
+            padding: 15px 40px;
+            background: var(--forest);
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 5px;
+        }
+        
+        .game-button:hover {
+            background: var(--forest-light);
+            transform: translateY(-2px);
+        }
+        
+        .game-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        @media screen and (max-width: 650px) {
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .memory-card {
+                font-size: 2rem;
+            }
+            
+            .game-container {
+                padding: 25px;
+            }
+            
+            .harvest-game {
+                height: 400px;
+            }
+            
+            .game-tabs {
+                gap: 10px;
+            }
+            
+            .game-tab {
+                min-width: 150px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation bar -->
+    <div class="topnav" id="myTopnav">
+        <a href="index.html"><i class="fa fa-home"></i> Project Description</a>
+        <a href="combinedmaps.html"><i class="fa fa-map-marker"></i> Light Rail</a>
+        <a href="ppatches.html"><i class="fa fa-leaf"></i> P Patches</a>
+        <a href="team.html"><i class="fa fa-handshake-o"></i> Meet the Team</a>
+        <a href="acknowledgements.html"><i class="fa fa-list"></i> Acknowledgements</a>
+        <a class="active" href="games.html"><i class="fa fa-gamepad"></i> Games</a>
+        <a href="javascript:void(0);" class="icon" onclick="toggleTopnav()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <script>
+    function toggleTopnav() {
+        var x = document.getElementById("myTopnav");
+        if (x.className === "topnav") {
+            x.className += " responsive";
+        } else {
+            x.className = "topnav";
+        }
+    }
+    </script>
+
+    <div class="page-wrapper">
+        <div class="content">
+            <strong>P-Patch Games</strong>
+
+            <div class="card">
+                <p>
+                    Take a break and celebrate Seattle's P-Patches with these interactive games! 
+                    Test your memory, knowledge, and reflexes while learning about urban gardening.
+                </p>
+            </div>
+
+            <!-- Game Selection Tabs -->
+            <div class="game-tabs">
+                <div class="game-tab active" onclick="switchGame('memory')">
+                    <h3>🌱 Memory Match</h3>
+                    <p>Match the garden pairs!</p>
+                </div>
+                <div class="game-tab" onclick="switchGame('trivia')">
+                    <h3>🌿 P-Patch Trivia</h3>
+                    <p>Test your knowledge!</p>
+                </div>
+                <div class="game-tab" onclick="switchGame('harvest')">
+                    <h3>🥕 Harvest Rush</h3>
+                    <p>Catch the veggies!</p>
+                </div>
+            </div>
+
+            <!-- Memory Game -->
+            <div id="memory-game" class="game-container active">
+                <div class="game-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="memory-moves">0</div>
+                        <div class="stat-label">Moves</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="memory-matches">0</div>
+                        <div class="stat-label">Matches</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="game-button" onclick="initMemoryGame()">New Game</button>
+                </div>
+                <div class="memory-grid" id="memory-grid"></div>
+            </div>
+
+            <!-- Trivia Game -->
+            <div id="trivia-game" class="game-container">
+                <div class="game-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="trivia-score">0</div>
+                        <div class="stat-label">Score</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="trivia-question-num">1</div>
+                        <div class="stat-label">Question</div>
+                    </div>
+                </div>
+                <div id="trivia-content"></div>
+            </div>
+
+            <!-- Harvest Rush Game -->
+            <div id="harvest-game-container" class="game-container">
+                <div class="game-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="harvest-score">0</div>
+                        <div class="stat-label">Score</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="harvest-lives">3</div>
+                        <div class="stat-label">Lives</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="harvest-level">1</div>
+                        <div class="stat-label">Level</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="game-button" id="harvest-start" onclick="startHarvest()">Start Game</button>
+                    <button class="game-button" id="harvest-pause" onclick="pauseHarvest()" style="display:none;">Pause</button>
+                </div>
+                <div class="harvest-game" id="harvest-game">
+                    <div class="basket" id="basket">🧺</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Game Switching
+        function switchGame(game) {
+            document.querySelectorAll('.game-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.game-container').forEach(container => container.classList.remove('active'));
+            
+            event.target.closest('.game-tab').classList.add('active');
+            document.getElementById(game + '-game' + (game === 'harvest' ? '-container' : '')).classList.add('active');
+            
+            if (game === 'harvest') {
+                resetHarvest();
+            }
+        }
+
+        // MEMORY GAME
+        const memoryEmojis = ['🥕', '🥬', '🍅', '🥒', '🌽', '🫑', '🥔', '🧅'];
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+
+        function initMemoryGame() {
+            matchedPairs = 0;
+            moves = 0;
+            flippedCards = [];
+            document.getElementById('memory-moves').textContent = '0';
+            document.getElementById('memory-matches').textContent = '0';
+            
+            const cardPairs = [...memoryEmojis, ...memoryEmojis];
+            memoryCards = cardPairs.sort(() => Math.random() - 0.5);
+            
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            
+            memoryCards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.index = index;
+                card.dataset.emoji = emoji;
+                card.innerHTML = '<div class="memory-card-back">🌱</div>';
+                card.onclick = () => flipCard(card);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length === 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            card.innerHTML = card.dataset.emoji;
+            flippedCards.push(card);
+            
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('memory-moves').textContent = moves;
+                
+                setTimeout(() => checkMatch(), 800);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.emoji === card2.dataset.emoji) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                document.getElementById('memory-matches').textContent = matchedPairs;
+                
+                if (matchedPairs === memoryEmojis.length) {
+                    setTimeout(() => alert(`🎉 Congratulations! You won in ${moves} moves!`), 300);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.innerHTML = '<div class="memory-card-back">🌱</div>';
+                card2.innerHTML = '<div class="memory-card-back">🌱</div>';
+            }
+            
+            flippedCards = [];
+        }
+
+        // TRIVIA GAME
+        const triviaQuestions = [
+            {
+                question: "What does 'P-Patch' stand for?",
+                options: ["Public Patch", "Picardo Patch", "People's Patch", "Plant Patch"],
+                correct: 1,
+                explanation: "P-Patch is named after the Picardo family, who owned the land where Seattle's first community garden was established in 1973!"
+            },
+            {
+                question: "How many P-Patch gardens are there in Seattle?",
+                options: ["25", "50", "75", "90+"],
+                correct: 3,
+                explanation: "Seattle has over 90 P-Patch community gardens across the city, making it one of the largest urban gardening programs in the US!"
+            },
+            {
+                question: "What year was Seattle's first P-Patch established?",
+                options: ["1965", "1973", "1980", "1990"],
+                correct: 1,
+                explanation: "The first P-Patch was established in 1973 in the Wedgwood neighborhood on land owned by the Picardo family."
+            },
+            {
+                question: "P-Patches help address which urban issue?",
+                options: ["Food security", "Community building", "Environmental sustainability", "All of the above"],
+                correct: 3,
+                explanation: "P-Patches support food security, bring communities together, and promote environmental sustainability through local food production!"
+            },
+            {
+                question: "What is a common requirement to get a P-Patch plot?",
+                options: ["Being on a waiting list", "Paying annual fees", "Attending orientations", "All of the above"],
+                correct: 3,
+                explanation: "Most P-Patches have waiting lists, require annual fees (often sliding scale), and ask gardeners to attend orientations."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let triviaScore = 0;
+        let answered = false;
+
+        function loadTrivia() {
+            if (currentQuestion >= triviaQuestions.length) {
+                document.getElementById('trivia-content').innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <h2 style="color: var(--forest); margin-bottom: 20px;">🎉 Quiz Complete!</h2>
+                        <p style="font-size: 1.5rem; margin-bottom: 30px;">Your score: ${triviaScore}/${triviaQuestions.length}</p>
+                        <button class="game-button" onclick="resetTrivia()">Play Again</button>
+                    </div>
+                `;
+                return;
+            }
+
+            answered = false;
+            const q = triviaQuestions[currentQuestion];
+            document.getElementById('trivia-question-num').textContent = currentQuestion + 1;
+            
+            let html = `
+                <div class="trivia-question">${q.question}</div>
+                <div class="trivia-options">
+            `;
+            
+            q.options.forEach((option, index) => {
+                html += `<div class="trivia-option" onclick="answerTrivia(${index})">${option}</div>`;
+            });
+            
+            html += `</div><div id="trivia-feedback"></div>`;
+            document.getElementById('trivia-content').innerHTML = html;
+        }
+
+        function answerTrivia(selected) {
+            if (answered) return;
+            answered = true;
+            
+            const q = triviaQuestions[currentQuestion];
+            const options = document.querySelectorAll('.trivia-option');
+            const feedback = document.getElementById('trivia-feedback');
+            
+            if (selected === q.correct) {
+                triviaScore++;
+                options[selected].classList.add('correct');
+                feedback.className = 'trivia-feedback correct';
+                feedback.textContent = '✓ Correct! ' + q.explanation;
+            } else {
+                options[selected].classList.add('incorrect');
+                options[q.correct].classList.add('correct');
+                feedback.className = 'trivia-feedback incorrect';
+                feedback.textContent = '✗ ' + q.explanation;
+            }
+            
+            document.getElementById('trivia-score').textContent = triviaScore;
+            
+            setTimeout(() => {
+                currentQuestion++;
+                loadTrivia();
+            }, 3500);
+        }
+
+        function resetTrivia() {
+            currentQuestion = 0;
+            triviaScore = 0;
+            document.getElementById('trivia-score').textContent = '0';
+            loadTrivia();
+        }
+
+        // HARVEST RUSH GAME
+        const harvestEmojis = ['🥕', '🥬', '🍅', '🥒', '🌽', '🫑'];
+        let harvestScore = 0;
+        let harvestLives = 3;
+        let harvestLevel = 1;
+        let harvestActive = false;
+        let harvestPaused = false;
+        let harvestInterval;
+        let basketPosition = 260;
+        let activeItems = [];
+
+        function startHarvest() {
+            if (harvestActive) return;
+            
+            harvestActive = true;
+            harvestPaused = false;
+            harvestScore = 0;
+            harvestLives = 3;
+            harvestLevel = 1;
+            activeItems = [];
+            
+            updateHarvestStats();
+            document.getElementById('harvest-start').style.display = 'none';
+            document.getElementById('harvest-pause').style.display = 'inline-block';
+            
+            document.querySelectorAll('.falling-item').forEach(item => item.remove());
+            
+            harvestInterval = setInterval(createFallingItem, 1200);
+            requestAnimationFrame(gameLoop);
+        }
+
+        function pauseHarvest() {
+            harvestPaused = !harvestPaused;
+            document.getElementById('harvest-pause').textContent = harvestPaused ? 'Resume' : 'Pause';
+        }
+
+        function resetHarvest() {
+            harvestActive = false;
+            harvestPaused = false;
+            clearInterval(harvestInterval);
+            activeItems = [];
+            document.querySelectorAll('.falling-item').forEach(item => item.remove());
+            document.getElementById('harvest-start').style.display = 'inline-block';
+            document.getElementById('harvest-pause').style.display = 'none';
+            harvestScore = 0;
+            harvestLives = 3;
+            harvestLevel = 1;
+            updateHarvestStats();
+        }
+
+        function createFallingItem() {
+            if (!harvestActive || harvestPaused) return;
+            
+            const game = document.getElementById('harvest-game');
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            item.textContent = harvestEmojis[Math.floor(Math.random() * harvestEmojis.length)];
+            
+            const startX = Math.random() * (game.offsetWidth - 50);
+            item.style.left = startX + 'px';
+            item.style.top = '-50px';
+            
+            game.appendChild(item);
+            
+            const speed = 2 + (harvestLevel * 0.3);
+            activeItems.push({
+                element: item,
+                x: startX,
+                y: -50,
+                speed: speed,
+                caught: false
+            });
+        }
+
+        function gameLoop() {
+            if (!harvestActive) return;
+            
+            if (!harvestPaused) {
+                const game = document.getElementById('harvest-game');
+                const basket = document.getElementById('basket');
+                const basketRect = basket.getBoundingClientRect();
+                const gameRect = game.getBoundingClientRect();
+                
+                activeItems = activeItems.filter(item => {
+                    if (item.caught) return false;
+                    
+                    item.y += item.speed;
+                    item.element.style.top = item.y + 'px';
+                    
+                    const itemRect = item.element.getBoundingClientRect();
+                    
+                    // Check collision with basket
+                    if (itemRect.bottom >= basketRect.top &&
+                        itemRect.top <= basketRect.bottom &&
+                        itemRect.right >= basketRect.left &&
+                        itemRect.left <= basketRect.right) {
+                        
+                        harvestScore += 10;
+                        if (harvestScore % 100 === 0 && harvestScore > 0) {
+                            harvestLevel++;
+                        }
+                        updateHarvestStats();
+                        item.element.remove();
+                        item.caught = true;
+                        return false;
+                    }
+                    
+                    // Check if item reached bottom
+                    if (item.y > game.offsetHeight) {
+                        harvestLives--;
+                        updateHarvestStats();
+                        item.element.remove();
+                        
+                        if (harvestLives <= 0) {
+                            endHarvest();
+                        }
+                        return false;
+                    }
+                    
+                    return true;
+                });
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updateHarvestStats() {
+            document.getElementById('harvest-score').textContent = harvestScore;
+            document.getElementById('harvest-lives').textContent = harvestLives;
+            document.getElementById('harvest-level').textContent = harvestLevel;
+        }
+
+        function endHarvest() {
+            harvestActive = false;
+            clearInterval(harvestInterval);
+            document.getElementById('harvest-start').style.display = 'inline-block';
+            document.getElementById('harvest-pause').style.display = 'none';
+            setTimeout(() => {
+                alert(`Game Over! Final Score: ${harvestScore}`);
+            }, 100);
+            activeItems.forEach(item => item.element.remove());
+            activeItems = [];
+        }
+
+        // Basket movement
+        document.getElementById('harvest-game').addEventListener('mousemove', (e) => {
+            const game = document.getElementById('harvest-game');
+            const basket = document.getElementById('basket');
+            const rect = game.getBoundingClientRect();
+            let x = e.clientX - rect.left - 40;
+            x = Math.max(0, Math.min(x, game.offsetWidth - 80));
+            basket.style.left = x + 'px';
+        });
+
+        // Touch support
+        document.getElementById('harvest-game').addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const game = document.getElementById('harvest-game');
+            const basket = document.getElementById('basket');
+            const rect = game.getBoundingClientRect();
+            let x = e.touches[0].clientX - rect.left - 40;
+            x = Math.max(0, Math.min(x, game.offsetWidth - 80));
+            basket.style.left = x + 'px';
+        });
+
+        // Initialize games on load
+        initMemoryGame();
+        loadTrivia();
+    </script>
+
+</body>
+
+</html>
