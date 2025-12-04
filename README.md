@@ -41,13 +41,13 @@ When users open the P-Patches map, the timeline slider displays all gardens esta
 - GitHub & GitHub Pages - version control and project hosting
 
 ## Acknowledgements
-Thanks to Professor Bo Zhao, for providing the foundation, framework, and inspiration that made this project possible.
+- Thanks to Professor Bo Zhao, for providing the foundation, framework, and inspiration that made this project possible.
 
-Thanks to Hudson Dougan, for his unending support, guidance, and thoughtful feedback throughout every stage of the project.
+- Thanks to Hudson Dougan, for his unending support, guidance, and thoughtful feedback throughout every stage of the project.
 
-Thanks to the City of Seattle and Sound Transit for maintaining and publishing civic spatial datasets that empower research and community engagement.
+- Thanks to the City of Seattle and Sound Transit for maintaining and publishing civic spatial datasets that empower research and community engagement.
 
-And lastly thanks to our peers and colleagues who contributed ideas, debugging help, constructive criticism, and additional perspectives.
+- And lastly thanks to our peers and colleagues who contributed ideas, debugging help, constructive criticism, and additional perspectives.
 
 ## AI Disclosure
 This project incorporates the use of AI tools including Claude.ai and ChatGPT for various components, such as generating the favicon, brainstorming the repository name and project title, and assisting with code structure and design iterations. We believe in transparent acknowledgment of all tools and collaborators that contribute to academic work.
