@@ -39,6 +39,7 @@ When users open the P-Patches map, the timeline slider displays all gardens esta
 ## Applied Libaries & Web Services
 - Mapbox GL JS – interactive web mapping and layer visualization
 - GitHub & GitHub Pages - version control and project hosting
+- JupyterHub - lightrail data cleaning 
 
 ## Acknowledgements
 - Thanks to Professor Bo Zhao, for providing the foundation, framework, and inspiration that made this project possible.
