@@ -16,7 +16,7 @@ By making this spatial information easy to explore, the project supports residen
 ## Main Functions
 When users first open the site, they land on a main page featuring a navigation bar that directs them to all project sections, including Light Rail, P-Patches, Meet the Team, Acknowledgements, and Games. 
 
-![intro](assets/welcome_page.png)
+![intro](assets/intro_page.png)
 
 On the light rail map it shows stations in blue points and P-Patches appear as carrot icons. Usera can see all the P-Patches and draws a route to it based on their lightrail station. Users can also click on any P-Patch to view a pop-up displaying its name and address.
 
