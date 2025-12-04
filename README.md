@@ -3,7 +3,7 @@
 ## Description 
 This project maps Seattle's P-Patch community gardens alongside the city's light rail network to help residents more easily locate accessible, local, and nutritious food options. In a city where transit access and healthy food availability vary widely by neighborhood, this tool aims to bridge the gap by visualizing how close community members are to fresh produce grown in their own communities.
 
-Project url (here)
+http://twickss.github.io/peas_on_earth
 
 ## Favicon 
 ![carrot](assets/Carrot.png)
