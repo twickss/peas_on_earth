@@ -11,18 +11,59 @@
 <style>
   body { margin: 0; padding: 0; }
   #map { width: 100%; height: 90vh; }
+
+  .map-overlay {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      z-index: 10;
+      overflow: auto;
+  }
+  
+  #features { top: 20px; left: 20px; width: 300px; }
+  #legend { bottom: 150px; left: 20px; width: 180px; font-size: 14px; line-height: 22px; }
+
+  h1 {
+      font-size: 24px;
+  }
+
+  h2 {
+      font-size: 18px;
+  }
+  
   #slider-container {
       width: 90%;
       margin: 15px auto;
       text-align: center;
   }
   #year-value { font-weight: bold; }
+
+  .legend-key {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+      border-radius: 50%;
+      vertical-align: middle;
+  }
 </style>
 </head>
 
 <body>
 
 <div id="map"></div>
+
+<div class="map-overlay" id="features">
+  <h1>Seattle P-Patches Over Time</h1>
+  <div id="text-description"><p>Hover over a P-Patch (orange carrot)!</p></div>
+  <p>---------------</p>
+  <h2><i>Hold Ctrl and drag to tilt the map</i></h2>
+</div>
+
+<div class="map-overlay" id="legend"></div>
 
 <div id="slider-container">
   <input id="year-slider" type="range" min="1970" max="2025" step="1" value="1970" />
@@ -74,6 +115,31 @@ map.on('load', () => {
             loadGeoJSON("https://raw.githubusercontent.com/twickss/finalproject/main/assets/P_Patches.geojson");
         }
     );
+
+    // Legend
+    const legend = document.getElementById('legend');
+    legend.innerHTML = "<b><h3>Legend</h3></b>";
+
+    // P-Patch
+    const ppatchItem = document.createElement('div');
+    const img = document.createElement('img');
+    img.src = 'https://raw.githubusercontent.com/twickss/finalproject/main/assets/Carrot.png';
+    img.style.width = '16px';
+    img.style.height = '16px';
+    img.style.verticalAlign = 'middle';
+    img.style.marginRight = '5px';
+    ppatchItem.appendChild(img);
+    ppatchItem.appendChild(document.createTextNode('P-Patch'));
+    legend.appendChild(ppatchItem);
+});
+
+// Hover popup
+map.on('mousemove', ({ point }) => {
+    const features = map.queryRenderedFeatures(point, { layers: ['ppatches-layer'] });
+    document.getElementById('text-description').innerHTML = features.length ?
+        `<h3>Name: <em>${features[0].properties.NAME}</em></h3>
+            <p><strong>Address: <em>${features[0].properties.ADDRESS}</em></strong></p>` :
+        `<p>Hover over a P-Patch (orange carrot)!</p>`;
 });
 
 // Load GeoJSON from URL
@@ -106,5 +172,6 @@ slider.addEventListener('input', (e) => {
 
 </body>
 </html>
+
 
 
