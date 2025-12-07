@@ -27,11 +27,11 @@
   #legend { bottom: 150px; left: 20px; width: 180px; font-size: 14px; line-height: 22px; }
 
   h1 {
-      font-size: 24px;
+      font-size: 21px;
   }
 
   h2 {
-      font-size: 18px;
+      font-size: 15px;
   }
   
   #slider-container {
@@ -58,9 +58,8 @@
 
 <div class="map-overlay" id="features">
   <h1>Seattle P-Patches Over Time</h1>
-  <div id="text-description"><p>Hover over a P-Patch (orange carrot)!</p></div>
-  <p>---------------</p>
-  <h2><i>Hold Ctrl and drag to tilt the map</i></h2>
+    <div id="text-description"><p><i>Hover over a P-Patch (orange carrot)!</i></p></div>
+    <p>Hold Ctrl and drag to tilt the map</p>
 </div>
 
 <div class="map-overlay" id="legend"></div>
@@ -118,7 +117,7 @@ map.on('load', () => {
 
     // Legend
     const legend = document.getElementById('legend');
-    legend.innerHTML = "<b><h3>Legend</h3></b>";
+    legend.innerHTML = "<b><h2>Legend</h2></b>";
 
     // P-Patch
     const ppatchItem = document.createElement('div');
@@ -139,7 +138,7 @@ map.on('mousemove', ({ point }) => {
     document.getElementById('text-description').innerHTML = features.length ?
         `<h3>Name: <em>${features[0].properties.NAME}</em></h3>
             <p><strong>Address: <em>${features[0].properties.ADDRESS}</em></strong></p>` :
-        `<p>Hover over a P-Patch (orange carrot)!</p>`;
+        `<p><i>Hover over a P-Patch (orange carrot)!</i></p>`;
 });
 
 // Load GeoJSON from URL
@@ -172,6 +171,7 @@ slider.addEventListener('input', (e) => {
 
 </body>
 </html>
+
 
 
 
