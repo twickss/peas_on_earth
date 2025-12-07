@@ -25,8 +25,16 @@
         overflow: auto;
     }
 
-    #features { top: 20px; left: 20px; width: 300px; max-height: 180px; }
+    #features { top: 20px; left: 20px; width: 300px; }
     #legend { bottom: 20px; left: 20px; width: 180px; font-size: 14px; line-height: 22px; }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
 
     .legend-key {
         display: inline-block;
@@ -44,8 +52,10 @@
 <div id="map"></div>
 
 <div class="map-overlay" id="features">
-    <h2>Seattle P-Patches and Lightrail Stations</h2>
+    <h1>Seattle P-Patches and Lightrail Stations</h1>
     <div id="text-description"><p>Hover over a P-Patch (orange carrot)!</p></div>
+    <p>---------------</p>
+    <h2><i>Hold Ctrl and drag to tilt the map</i></h2>
 </div>
 
 <div class="map-overlay" id="legend"></div>
@@ -211,7 +221,7 @@ map.on("click", "ppatches-layer", function (e) {
 
         // Legend
         const legend = document.getElementById('legend');
-        legend.innerHTML = "<b>Legend</b><br><br>";
+        legend.innerHTML = "<b><h3>Legend</h3></b>";
 
         // P-Patch
         const ppatchItem = document.createElement('div');
@@ -241,6 +251,7 @@ loadData();
 
 </body>
 </html>
+
 
 
 
